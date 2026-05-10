@@ -6,21 +6,37 @@ Convert handwritten notes, whiteboard photos, and slide screenshots into searcha
 
 ---
 
-## Key feature: Numbered region selection / 採番機能
+## What TEGAKI does / できること
 
-Unlike other OCR plugins that read left-to-right automatically, TEGAKI lets you **decide the reading order**:
+TEGAKI sends your image to an AI Vision API (Gemini Flash or Claude Haiku) and extracts:
 
-1. Open an image → click regions in the order you want them read
-2. Each click places a numbered marker
-3. Hit "OCR" → text is extracted in your specified order
+1. **All printed text** — preserving structure and layout
+2. **Handwritten annotations** — including their position context
 
-他のOCRプラグインが自動で左上から読むのに対して、TEGAKIは**読む順番をあなたが決めます**：
+Example output for a slide with handwritten notes:
 
-1. 画像を開く → 読みたい順番にクリックして領域を選ぶ
-2. クリックした箇所に番号マーカーが付く
-3. 「OCR」を実行 → 指定した順番でテキスト化
+```
+## Handwritten notes
+- top-right: good ✓
+- circling the left list: 解析
+- arrow pointing to 介入群: →
+- bottom-right: Font も.
+```
 
-商談メモ・ホワイトボード・手帳の殴り書きなど、散り書きされたメモに最適です。
+Unlike generic OCR, TEGAKI understands **where** annotations are written — circles, arrows, margin notes — not just what they say.
+
+手書きのテキストだけでなく、「どこに何を書いたか」まで抽出します。丸で囲んだ部分・矢印の向き・余白のメモが位置情報付きで記録されます。
+
+---
+
+## Commands / コマンド
+
+Both commands are available via `Ctrl+P`:
+
+| Command | Description |
+|---------|-------------|
+| **OCR: append to note** | Full OCR (printed + handwritten). Appends result to current note. |
+| **OCR: handwriting only** | Extracts only handwritten annotations with position context. |
 
 ---
 
@@ -33,7 +49,6 @@ Unlike other OCR plugins that read left-to-right automatically, TEGAKI lets you 
 >
 > **OCR処理を行うと、画像が外部API（Google Gemini または Anthropic Claude）に送信されます。**
 > 機密情報や個人情報が含まれる画像には使用しないでください。
-> お使いのAPIプロバイダーのプライバシーポリシーを必ずご確認ください。
 >
 > Your API key is stored locally in your Obsidian vault (`data.json`). It is never sent to any server other than the respective AI provider.
 > APIキーはObsidianのvault内（`data.json`）にローカル保存されます。AIプロバイダー以外のサーバーには送信されません。
@@ -46,8 +61,7 @@ Unlike other OCR plugins that read left-to-right automatically, TEGAKI lets you 
    Obsidianのコミュニティプラグインからインストール
 2. Go to **Settings → TEGAKI**
    設定 → TEGAKI を開く
-3. Select your OCR engine:
-   OCRエンジンを選択：
+3. Select your OCR engine / OCRエンジンを選択：
    - **Gemini Flash** (default) — 1,500 free requests/day, no credit card required / 1日1,500回まで無料
    - **Claude Haiku** — higher accuracy on complex handwriting, paid API / 複雑な手書きに強い、有料
 4. Paste your API key / APIキーを貼り付ける
@@ -64,15 +78,18 @@ On the bright side: every saved image becomes a node in your **Graph View**. Org
 
 Obsidianのノートに画像を貼り付けると、**Obsidianが自動でvault内にファイルとして保存します**。これはObsidianの標準機能です（TEGAKIとは無関係です）。
 
-> ⚠️ vault内の画像ファイルを削除すると、ノート内のembed（`![[image.png]]`）が壊れて画像が表示されなくなります。ファイルの整理をする際はご注意ください。
-
-画像ファイルはグラフビューのノードにもなります。フォルダに整理してリンクを育てていくと、ナレッジグラフが美しく広がっていきます。ぜひ楽しんでみてください。✦
-
 ---
 
 ## Supported formats / 対応フォーマット
 
 JPEG, PNG, WebP, GIF
+
+---
+
+## Roadmap / 今後の予定
+
+- [ ] Numbered region selection: click regions in order → OCR in that sequence
+- [ ] Multi-image selection modal when note contains multiple images
 
 ---
 
