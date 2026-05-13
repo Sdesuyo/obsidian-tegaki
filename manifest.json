@@ -3,7 +3,7 @@
   "name": "Tegaki",
   "version": "0.1.1",
   "minAppVersion": "1.4.0",
-  "description": "Convert handwritten notes and images to searchable text using AI (Gemini Flash / Claude Haiku). Note: images are sent to external APIs (Google / Anthropic).",
+  "description": "Convert handwritten notes and images to searchable text using AI Vision APIs (Gemini / Claude). Note: images are sent to external APIs (Google / Anthropic).",
   "author": "Sdesuyo",
   "authorUrl": "https://github.com/Sdesuyo",
   "isDesktopOnly": true
