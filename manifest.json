@@ -1,7 +1,7 @@
 {
   "id": "tegaki",
   "name": "Tegaki",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "1.4.0",
   "description": "Convert handwritten notes and images to searchable text using AI Vision APIs (Gemini / Claude). Note: images are sent to external APIs (Google / Anthropic).",
   "author": "Sdesuyo",
