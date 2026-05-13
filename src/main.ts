@@ -21,6 +21,7 @@ function findEmbeddedImages(content: string): string[] {
 
 interface TegakiSettings {
 	engine: "gemini" | "claude";
+	quality: "fast" | "accurate";
 	geminiApiKey: string;
 	claudeApiKey: string;
 	language: "en" | "ja";
@@ -28,6 +29,7 @@ interface TegakiSettings {
 
 const DEFAULT_SETTINGS: TegakiSettings = {
 	engine: "gemini",
+	quality: "accurate",
 	geminiApiKey: "",
 	claudeApiKey: "",
 	language: "en",
@@ -134,13 +136,14 @@ export default class TegakiPlugin extends Plugin {
 
 			let text: string;
 			const lang = this.settings.language;
+			const quality = this.settings.quality;
 			if (this.settings.engine === "gemini") {
-				text = await ocrWithGemini(base64, mime, this.settings.geminiApiKey, promptType, lang);
+				text = await ocrWithGemini(base64, mime, this.settings.geminiApiKey, promptType, lang, quality);
 			} else {
 				if (!this.settings.claudeApiKey) {
 					throw new Error("Claude API key is not set (Settings → TEGAKI).");
 				}
-				text = await ocrWithClaude(base64, mime, this.settings.claudeApiKey, promptType, lang);
+				text = await ocrWithClaude(base64, mime, this.settings.claudeApiKey, promptType, lang, quality);
 			}
 
 			const sectionHeader = promptType === "handwriting"
@@ -239,14 +242,28 @@ class TegakiSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl).setName("OCR engine").addDropdown((d) =>
 			d
-				.addOption("gemini", "Gemini Flash (default — 1,500 free req/day)")
-				.addOption("claude", "Claude Haiku (higher accuracy, paid)")
+				.addOption("gemini", "Gemini (Google)")
+				.addOption("claude", "Claude (Anthropic)")
 				.setValue(this.plugin.settings.engine)
 				.onChange(async (v) => {
 					this.plugin.settings.engine = v as "gemini" | "claude";
 					await this.plugin.saveSettings();
 				})
 		);
+
+		new Setting(containerEl)
+			.setName("Quality / 精度")
+			.setDesc("手書きOCRにはAccurate推奨。Fast は印刷テキスト向け。")
+			.addDropdown((d) =>
+				d
+					.addOption("accurate", "🎯 Accurate  (Gemini Pro / Claude Sonnet)  ← 推奨")
+					.addOption("fast", "⚡ Fast  (Gemini Flash / Claude Haiku)  印刷テキスト向け")
+					.setValue(this.plugin.settings.quality)
+					.onChange(async (v) => {
+						this.plugin.settings.quality = v as "fast" | "accurate";
+						await this.plugin.saveSettings();
+					})
+			);
 
 		new Setting(containerEl)
 			.setName("Gemini API key")
